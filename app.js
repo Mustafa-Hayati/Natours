@@ -42,6 +42,7 @@ app.get("/api/v1/tours/:id", (req, res) => {
   // question mark (?) after it like :id?
   const { id } = req.params;
 
+  // This is a wrong logic
   if (+id > tours.length)
     return res.status(404).json({
       status: "fail",
@@ -81,6 +82,43 @@ app.post("/api/v1/tours", (req, res) => {
         status: "success",
         data: {
           tour: newTour,
+        },
+      });
+    }
+  );
+});
+
+// @route    PATCH api/v1/tours/:id
+// @desc     Update one tour
+// @access   Private
+
+app.patch("/api/v1/tours/:id", (req, res) => {
+  let { id } = req.params;
+  id = +id;
+
+  const tourIndex = tours.findIndex(t => t.id === id);
+  if (tourIndex === -1)
+    return res.status(404).json({
+      status: "fail",
+      data: {
+        msg: "There's no such a tour",
+      },
+    });
+
+  const updatedTour = {
+    ...tours[tourIndex],
+    ...req.body,
+  };
+
+  tours[tourIndex] = updatedTour;
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    err => {
+      res.status(200).json({
+        status: "success",
+        data: {
+          tour: updatedTour,
         },
       });
     }

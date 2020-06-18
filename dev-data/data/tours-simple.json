@@ -40,7 +40,7 @@
   {
     "id": 2,
     "name": "The Snow Adventurer",
-    "duration": 4,
+    "duration": 5,
     "maxGroupSize": 10,
     "difficulty": "difficult",
     "ratingsAverage": 4.5,
