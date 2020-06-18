@@ -17,13 +17,8 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
-//? *************** Routes ***************
-
-// @route    GET api/v1/tours
-// @desc     Get All tours
-// @access   Public
-
-app.get("/api/v1/tours", (req, res) => {
+//? *************** Controllers ***************
+const getAllTours = (req, res) => {
   res.status(200).json({
     status: "success",
     results: tours.length,
@@ -31,13 +26,9 @@ app.get("/api/v1/tours", (req, res) => {
       tours,
     },
   });
-});
+};
 
-// @route    GET api/v1/tours/:id
-// @desc     Get One specific tour
-// @access   Public
-
-app.get("/api/v1/tours/:id", (req, res) => {
+const getTour = (req, res) => {
   // you can make a parameter optional by adding
   // question mark (?) after it like :id?
   const { id } = req.params;
@@ -56,12 +47,9 @@ app.get("/api/v1/tours/:id", (req, res) => {
       tour,
     },
   });
-});
+};
 
-// @route    POST api/v1/tours
-// @desc     Create one tour
-// @access   Private
-app.post("/api/v1/tours", (req, res) => {
+const createTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, req.body);
   tours.push(newTour);
@@ -77,13 +65,9 @@ app.post("/api/v1/tours", (req, res) => {
       });
     }
   );
-});
+};
 
-// @route    PATCH api/v1/tours/:id
-// @desc     Update one tour
-// @access   Private
-
-app.patch("/api/v1/tours/:id", (req, res) => {
+const updateTour = (req, res) => {
   let { id } = req.params;
   id = +id;
 
@@ -114,13 +98,9 @@ app.patch("/api/v1/tours/:id", (req, res) => {
       });
     }
   );
-});
+};
 
-// @route    DELETE api/v1/tours/:id
-// @desc     Delete one tour
-// @access   Private
-
-app.delete("/api/v1/tours/:id", (req, res) => {
+const deleteTour = (req, res) => {
   let { id } = req.params;
   id = +id;
 
@@ -147,7 +127,49 @@ app.delete("/api/v1/tours/:id", (req, res) => {
       });
     }
   );
-});
+};
+
+//? *******************************************
+
+//? *************** Routes ***************
+
+// @route    GET api/v1/tours
+// @desc     Get All tours
+// @access   Public
+
+// app.get("/api/v1/tours", getAllTours);
+
+// @route    GET api/v1/tours/:id
+// @desc     Get One specific tour
+// @access   Public
+
+// app.get("/api/v1/tours/:id", getTour);
+
+// @route    POST api/v1/tours
+// @desc     Create one tour
+// @access   Private
+// app.post("/api/v1/tours", createTour);
+
+// @route    PATCH api/v1/tours/:id
+// @desc     Update one tour
+// @access   Private
+
+// app.patch("/api/v1/tours/:id", updateTour);
+
+// @route    DELETE api/v1/tours/:id
+// @desc     Delete one tour
+// @access   Private
+
+// app.delete("/api/v1/tours/:id", deleteTour);
+
+//! Another version
+app.route("/api/v1/tours").get(getAllTours).post(createTour);
+
+app
+  .route("/api/v1/tours/:id")
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
 
 //? *******************************************
 
