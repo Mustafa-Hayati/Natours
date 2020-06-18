@@ -14,6 +14,17 @@ exports.checkID = (req, res, next, paramValue) => {
   next();
 };
 
+exports.checkBody = (req, res, next) => {
+  const { body } = req;
+  if (!body.name || !body.price) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Missing name or price",
+    });
+  }
+  next();
+};
+
 exports.getAllTours = (req, res) => {
   res.status(200).json({
     status: "success",
