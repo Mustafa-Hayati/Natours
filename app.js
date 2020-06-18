@@ -1,21 +1,24 @@
-//? *************** Imports ***************
+//? ******** Imports and Initialization ********
 
 const fs = require("fs");
 const express = require("express");
+const morgan = require("morgan");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
+);
 
 //? *******************************************
 
 //? *************** Middlewares ***************
 
+app.use(morgan("dev"));
 app.use(express.json());
 
 //? *******************************************
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
-);
 
 //? *************** Controllers ***************
 const getAllTours = (req, res) => {
@@ -129,47 +132,76 @@ const deleteTour = (req, res) => {
   );
 };
 
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: "success",
+    data: {
+      msg: "This route is yet to be implemented.",
+    },
+  });
+};
+
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: "success",
+    data: {
+      msg: "This route is yet to be implemented.",
+    },
+  });
+};
+
+const createUser = (req, res) => {
+  res.status(500).json({
+    status: "success",
+    data: {
+      msg: "This route is yet to be implemented.",
+    },
+  });
+};
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: "success",
+    data: {
+      msg: "This route is yet to be implemented.",
+    },
+  });
+};
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: "success",
+    data: {
+      msg: "This route is yet to be implemented.",
+    },
+  });
+};
+
 //? *******************************************
 
 //? *************** Routes ***************
 
-// @route    GET api/v1/tours
-// @desc     Get All tours
-// @access   Public
+const tourRouter = express.Router();
+const userRouter = express.Router();
 
-// app.get("/api/v1/tours", getAllTours);
+tourRouter.route("/").get(getAllTours).post(createTour);
 
-// @route    GET api/v1/tours/:id
-// @desc     Get One specific tour
-// @access   Public
-
-// app.get("/api/v1/tours/:id", getTour);
-
-// @route    POST api/v1/tours
-// @desc     Create one tour
-// @access   Private
-// app.post("/api/v1/tours", createTour);
-
-// @route    PATCH api/v1/tours/:id
-// @desc     Update one tour
-// @access   Private
-
-// app.patch("/api/v1/tours/:id", updateTour);
-
-// @route    DELETE api/v1/tours/:id
-// @desc     Delete one tour
-// @access   Private
-
-// app.delete("/api/v1/tours/:id", deleteTour);
-
-//! Another version
-app.route("/api/v1/tours").get(getAllTours).post(createTour);
-
-app
-  .route("/api/v1/tours/:id")
+tourRouter
+  .route("/:id")
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
+
+userRouter.route("/").get(getAllUsers).post(createUser);
+
+userRouter
+  .route("/:id")
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
+
+app.use("/api/v1/tours", tourRouter);
+app.use("/api/v1/users", userRouter);
 
 //? *******************************************
 
