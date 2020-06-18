@@ -3,6 +3,17 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
+exports.checkID = (req, res, next, paramValue) => {
+  console.log(`Tour id is ${paramValue}`);
+  //! This logic is wrong
+  if (+req.params.id > tours.length)
+    return res.status(404).json({
+      status: "fail",
+      message: "Invalid ID",
+    });
+  next();
+};
+
 exports.getAllTours = (req, res) => {
   res.status(200).json({
     status: "success",
@@ -22,9 +33,7 @@ exports.getTour = (req, res) => {
   if (!tour)
     return res.status(404).json({
       status: "fail",
-      data: {
-        msg: "There's no such a tour.",
-      },
+      message: "There's no such a tour.",
     });
   res.status(200).json({
     status: "success",
@@ -60,9 +69,7 @@ exports.updateTour = (req, res) => {
   if (tourIndex === -1)
     return res.status(404).json({
       status: "fail",
-      data: {
-        msg: "There's no such a tour",
-      },
+      message: "There's no such a tour",
     });
 
   const updatedTour = {
@@ -93,9 +100,7 @@ exports.deleteTour = (req, res) => {
   if (tourIndex === -1)
     return res.status(404).json({
       status: "fail",
-      data: {
-        msg: "There's no such a tour",
-      },
+      message: "There's no such a tour",
     });
 
   tours.splice(tourIndex, 1);
