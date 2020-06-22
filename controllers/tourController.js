@@ -34,7 +34,15 @@ exports.getAllTours = async (req, res) => {
       query = query.sort("-createdAt");
     }
 
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      query = query.select(fields);
+    } else {
+      query = query.select("-__v");
+    }
+
     const tours = await query;
+
     res.status(200).json({
       status: "success",
       results: tours.length,
@@ -56,7 +64,7 @@ exports.getTour = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const tour = await Tour.findById(id).select("-__v");
+    const tour = await Tour.findById(id);
     res.status(200).json({
       status: "success",
       data: {
