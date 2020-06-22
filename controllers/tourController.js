@@ -11,103 +11,102 @@ const Tour = require("../models/tourModel");
 //   next();
 // };
 
-exports.checkBody = (req, res, next) => {
-  const { body } = req;
-  if (!body.name || !body.price) {
-    return res.status(400).json({
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find().select("-__v ");
+    res.status(200).json({
+      status: "success",
+      results: Tour.length,
+      data: {
+        tours,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
       status: "fail",
-      message: "Missing name or price",
+      message: error,
     });
   }
-  next();
 };
 
-exports.getAllTours = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    // results: tours.length,
-    // data: {
-    //   tours,
-    // },
-  });
-};
-
-exports.getTour = (req, res) => {
+exports.getTour = async (req, res) => {
   // you can make a parameter optional by adding
   // question mark (?) after it like :id?
   const { id } = req.params;
 
-  // const tour = tours.find(t => t.id === +id);
-  // if (!tour)
-  //   return res.status(404).json({
-  //     status: "fail",
-  //     message: "There's no such a tour.",
-  //   });
-  // res.status(200).json({
-  //   status: "success",
-  //   data: {
-  //     tour,
-  //   },
-  // });
+  try {
+    const tour = await Tour.findById(id).select("-__v");
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "fail",
+      message: error,
+    });
+  }
 };
 
-exports.createTour = (req, res) => {
-  // res.status(201).json({
-  //   status: "success",
-  //   data: {
-  //     tour: newTour,
-  //   },
-  // });
+exports.createTour = async (req, res) => {
+  try {
+    // I think it's not safe to let a user put something
+    // in the database without validating his/her inputs
+    // first
+    const newTour = await Tour.create(req.body);
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour: newTour,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: "Invalid data sent!",
+    });
+  }
 };
 
-exports.updateTour = (req, res) => {
-  // let { id } = req.params;
-  // id = +id;
-  // const tourIndex = tours.findIndex(t => t.id === id);
-  // if (tourIndex === -1)
-  //   return res.status(404).json({
-  //     status: "fail",
-  //     message: "There's no such a tour",
-  //   });
-  // const updatedTour = {
-  //   ...tours[tourIndex],
-  //   ...req.body,
-  // };
-  // tours[tourIndex] = updatedTour;
-  // fs.writeFile(
-  //   `${__dirname}/dev-data/data/tours-simple.json`,
-  //   JSON.stringify(tours),
-  //   err => {
-  //     res.status(200).json({
-  //       status: "success",
-  //       data: {
-  //         tour: updatedTour,
-  //       },
-  //     });
-  //   }
-  // );
+exports.updateTour = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const tour = await Tour.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "fail",
+      message: error,
+    });
+  }
 };
 
-exports.deleteTour = (req, res) => {
-  // let { id } = req.params;
-  // id = +id;
-  // const tourIndex = tours.findIndex(t => t.id === id);
-  // if (tourIndex === -1)
-  //   return res.status(404).json({
-  //     status: "fail",
-  //     message: "There's no such a tour",
-  //   });
-  // tours.splice(tourIndex, 1);
-  // fs.writeFile(
-  //   `${__dirname}/dev-data/data/tours-simple.json`,
-  //   JSON.stringify(tours),
-  //   err => {
-  //     res.status(204).json({
-  //       status: "success",
-  //       data: {
-  //         tour: null,
-  //       },
-  //     });
-  //   }
-  // );
+exports.deleteTour = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Tour.findByIdAndDelete(id);
+    res.status(204).json({
+      status: "success",
+      data: {
+        tour: null,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "fail",
+      message: error,
+    });
+  }
 };

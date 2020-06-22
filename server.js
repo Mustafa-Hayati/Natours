@@ -18,7 +18,7 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("Connected to MongoDB Atlas"));
+  .then(() => console.log("Connected to MongoDB"));
 
 const app = require("./app");
 const PORT = process.env.PORT || 3000;
