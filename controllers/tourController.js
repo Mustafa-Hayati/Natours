@@ -21,22 +21,21 @@ exports.aliasTopTours = (req, res, next) => {
 
 exports.getAllTours = async (req, res) => {
   try {
-    //! My version
-    // const features = new APIFeatures(Tour, req.query)
-    //   .filter()
-    //   .sort()
-    //   .limitFields()
-    //   .paginate();
-    //! Jonas version, I think there's a bug
-    const features = new APIFeatures(Tour.find(), req.query)
+    // ! My version
+    const features = new APIFeatures(Tour, req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
+    //! Jonas version, I think there's a bug
+    //     const features = new APIFeatures(Tour.find(), req.query)
+    //       .filter()
+    //       .sort()
+    //       .limitFields()
+    //       .paginate();
 
     const tours = await features.query;
     // Tour.find().sort().select().skip().limit
-
     res.status(200).json({
       status: "success",
       results: tours.length,
