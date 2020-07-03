@@ -7,6 +7,11 @@ const userRouter = require("./routes/userRoutes");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
+if (process.env.NODE_ENV === "development") {
+  console.log(`It's dev environment baby`);
+  // console.log(JSON.stringify(process.env.NODE_ENV));
+}
+
 const app = express();
 
 // console.log(app.get("env"));
