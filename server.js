@@ -21,6 +21,7 @@ let DB;
 //   DB = process.env.DATABASE_LOCAL;
 // }
 
+// TODO: change this before finishing the program
 DB = process.env.DATABASE_LOCAL;
 mongoose
   .connect(DB, {
