@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const rateLimit = require("express-rate-limit");
 
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
@@ -7,23 +8,23 @@ const userRouter = require("./routes/userRoutes");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
+const app = express();
+
 if (process.env.NODE_ENV === "development") {
   console.log(`It's dev environment baby`);
   // console.log(JSON.stringify(process.env.NODE_ENV));
-}
-
-const app = express();
-
-// console.log(app.get("env"));
-
-if (process.env.NODE_ENV === "development") {
+  // console.log(app.get("env"));
   app.use(morgan("dev"));
 }
 
-// app.use((req, res, next) => {
-//   console.log(req.headers);
-//   next();
-// });
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 3600000, // 1 hour
+  message:
+    "Too many requests from this IP, please try again in an hour.",
+});
+
+app.use("/api", limiter);
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
