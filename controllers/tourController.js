@@ -51,6 +51,11 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // question mark (?) after it like :id?
   const { id } = req.params;
 
+  // const tour = await Tour.findById(id).populate("guides");
+  // const tour = await Tour.findById(id).populate({
+  //   path: "guides",
+  //   select: "-__v -passwordChangedAt",
+  // });
   const tour = await Tour.findById(id);
 
   if (!tour) {
