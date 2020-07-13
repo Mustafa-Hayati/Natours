@@ -1,11 +1,11 @@
 const Tour = require("../models/tourModel");
-const APIFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
 const {
   deleteOne,
   updateOne,
   createOne,
+  getOne,
+  getAll,
 } = require("./handlerFactory");
 
 // exports.checkID = (req, res, next, paramValue) => {
@@ -26,54 +26,9 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  // ! My version
-  // const features = new APIFeatures(Tour, req.query)
-  //   .filter()
-  //   .sort()
-  //   .limitFields()
-  //   .paginate();
-  //! Jonas version, I think there's a bug
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
+exports.getAllTours = getAll(Tour);
 
-  const tours = await features.query;
-  // Tour.find().sort().select().skip().limit
-  res.status(200).json({
-    status: "success",
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
-});
-
-exports.getTour = catchAsync(async (req, res, next) => {
-  // you can make a parameter optional by adding
-  // question mark (?) after it like :id?
-  const { id } = req.params;
-
-  // const tour = await Tour.findById(id).populate("guides");
-  // const tour = await Tour.findById(id).populate({
-  //   path: "guides",
-  //   select: "-__v -passwordChangedAt",
-  // });
-  const tour = await Tour.findById(id).populate("reviews");
-
-  if (!tour) {
-    return next(new AppError("No tour found with that ID", 404));
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      tour,
-    },
-  });
-});
+exports.getTour = getOne(Tour, { path: "reviews" });
 
 exports.createTour = createOne(Tour);
 
