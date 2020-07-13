@@ -9,7 +9,11 @@ const {
   restrictTo,
 } = require("../controllers/authController");
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
+// ! we use merge params to have access to tourId param
+
+// POST /tour/:tourId/reviews
+// POST /reviews
 
 router
   .route("/")
