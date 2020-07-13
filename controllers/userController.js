@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
-const { deleteOne } = require("./handlerFactory");
+const { deleteOne, updateOne } = require("./handlerFactory");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -72,15 +72,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: "success",
-    data: {
-      msg: "This route is yet to be implemented.",
-    },
-  });
-};
-
 exports.deleteMe = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user._id, { active: false });
   res.status(204).json({
@@ -88,5 +79,8 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+//! DON'T UPDATE PASSWORDS WITH THIS
+exports.updateUser = updateOne(User);
 
 exports.deleteUser = deleteOne(User);

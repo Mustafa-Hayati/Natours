@@ -2,7 +2,11 @@ const Tour = require("../models/tourModel");
 const APIFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
-const { deleteOne } = require("./handlerFactory");
+const {
+  deleteOne,
+  updateOne,
+  createOne,
+} = require("./handlerFactory");
 
 // exports.checkID = (req, res, next, paramValue) => {
 //   console.log(`Tour id is ${paramValue}`);
@@ -71,39 +75,9 @@ exports.getTour = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createTour = catchAsync(async (req, res, next) => {
-  // I think it's not safe to let a user put something
-  // in the database without validating his/her inputs
-  // first
-  const newTour = await Tour.create(req.body);
+exports.createTour = createOne(Tour);
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      tour: newTour,
-    },
-  });
-});
-
-exports.updateTour = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-
-  const tour = await Tour.findByIdAndUpdate(id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-
-  if (!tour) {
-    return next(new AppError("No tour found with that ID", 404));
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      tour,
-    },
-  });
-});
+exports.updateTour = updateOne(Tour);
 
 exports.deleteTour = deleteOne(Tour);
 
