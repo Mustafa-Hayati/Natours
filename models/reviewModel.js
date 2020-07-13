@@ -33,6 +33,26 @@ const reviewSchema = new Schema(
   }
 );
 
+reviewSchema.pre(/^find/, function (next) {
+  //! The part with lots of problems
+  // this.populate({
+  //   path: "tour",
+  //   select:
+  //     "-_id -createdAt -startLocation -ratingsAverage -ratingsQuantity -images -startDates -guides -duration -maxGroupSize -durationWeeks -difficulty -price -summary -imageCover -locations -slug -id -__v",
+  // }).populate({
+  //   path: "user",
+  //   select: "-_id -role -email -__v",
+  // });
+  //? this works fine
+  this.populate({
+    path: "user",
+    select: "-role -email -__v",
+  });
+  // this.populate("user").populate("tour");
+
+  next();
+});
+
 const Review = mongoose.model("Review", reviewSchema);
 
 module.exports = Review;
