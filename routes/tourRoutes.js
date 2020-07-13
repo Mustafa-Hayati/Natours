@@ -1,4 +1,6 @@
 const express = require("express");
+const { createReview } = require("../controllers/reviewController");
+// const Review = require("../models/reviewModel");
 
 const {
   getAllTours,
@@ -31,5 +33,13 @@ router
   .get(getTour)
   .patch(updateTour)
   .delete(protect, restrictTo("admin", "lead-guide"), deleteTour);
+
+// POST /tour/tourID/reviews
+// GET /tour/tourID/reviews
+// GET tour/tourID/reviews/reviewID
+
+router
+  .route("/:tourId/reviews")
+  .post(protect, restrictTo("user"), createReview);
 
 module.exports = router;
