@@ -104,6 +104,7 @@ exports.getAll = Model =>
       .limitFields()
       .paginate();
 
+    // const doc = await features.query.explain();
     const doc = await features.query;
     // Tour.find().sort().select().skip().limit
     res.status(200).json({
