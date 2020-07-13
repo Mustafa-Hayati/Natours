@@ -16,18 +16,20 @@ const {
 const router = express.Router({ mergeParams: true });
 // ! we use merge params to have access to tourId param
 
+router.use(protect);
+
 // POST /tour/:tourId/reviews
 // POST /reviews
 
 router
   .route("/")
   .get(getAllReviews)
-  .post(protect, restrictTo("user"), setTourUserId, createReview);
+  .post(restrictTo("user"), setTourUserId, createReview);
 
 router
   .route("/:id")
   .get(getReview)
-  .patch(updateReview)
-  .delete(deleteReview);
+  .patch(restrictTo("user", "admin"), updateReview)
+  .delete(restrictTo("user", "admin"), deleteReview);
 
 module.exports = router;
