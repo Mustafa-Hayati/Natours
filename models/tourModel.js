@@ -134,6 +134,16 @@ const tourSchema = new mongoose.Schema(
 
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: "2dsphere" });
+// tourSchema.index({ point: "2dsphere" });
+
+// ! I had a test tour and removed it and indxing worked
+
+// ! if indexing does not work, you can do it manually
+// db.tours.createIndex({startLocation: "2dsphere"})
+// db.bar.createIndex({point:"2dsphere"});
+// db.tours.getIndexes()
+// db.tours.dropIndex(nameOfTheIndex)
 
 // Virtual Properties;
 tourSchema.virtual("durationWeeks").get(function () {
@@ -193,14 +203,14 @@ tourSchema.post(/^find/, function (doc, next) {
 });
 
 // Aggregation middlewares
-tourSchema.pre("aggregate", function (next) {
-  this.pipeline().unshift({
-    $match: {
-      secretTour: { $ne: true },
-    },
-  });
-  next();
-});
+// tourSchema.pre("aggregate", function (next) {
+//   this.pipeline().unshift({
+//     $match: {
+//       secretTour: { $ne: true },
+//     },
+//   });
+//   next();
+// });
 
 // Collection or model
 const Tour = mongoose.model("Tour", tourSchema);
