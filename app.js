@@ -14,6 +14,7 @@ const viewRouter = require("./routes/viewRoutes");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -52,6 +53,8 @@ app.use(
     limit: "10kb",
   })
 );
+app.use(cookieParser());
+// => Now we have access to req.cookies
 
 // data sanitization against NoSQL query injection
 app.use(mongoSanitize());
