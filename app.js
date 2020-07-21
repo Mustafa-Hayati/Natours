@@ -53,6 +53,12 @@ app.use(
     limit: "10kb",
   })
 );
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "10kb",
+  })
+);
 app.use(cookieParser());
 // => Now we have access to req.cookies
 
