@@ -4,7 +4,7 @@ const stripe = Stripe(
   "pk_test_51H8d74FmUbSKgcnDoAE4iN5AZePmYvaf7EQMXE6Y8X5w241L03PTozOKG1LcAcWqI7mlbQJARbz9UqsDzXgjqVxJ00I3N2fitL"
 );
 
-import { showAlert } from "./alerts";
+import { showAlert } from "./alert";
 
 export const bookTour = async tourId => {
   try {
