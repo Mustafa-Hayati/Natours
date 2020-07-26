@@ -20,6 +20,9 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
+// Trust proxies, because of heroku
+app.enable("trust proxy");
+
 // npm i pug, without requiring it
 app.set("view engine", "pug");
 
