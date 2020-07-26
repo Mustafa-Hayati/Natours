@@ -10,19 +10,17 @@ process.on("uncaughtException", err => {
 dotenv.config({ path: "./config.env" });
 
 let DB;
-// if (process.env.NODE_ENV === "production") {
-//   //! MongoDB Atlas
-//   DB = process.env.DATABASE.replace(
-//     "<PASSWORD>",
-//     process.env.DATABASE_PASSWORD
-//   );
-// } else {
-//   // ! Local Database
-//   DB = process.env.DATABASE_LOCAL;
-// }
+if (process.env.NODE_ENV === "production") {
+  //! MongoDB Atlas
+  DB = process.env.DATABASE.replace(
+    "<PASSWORD>",
+    process.env.DATABASE_PASSWORD
+  );
+} else {
+  // ! Local Database
+  DB = process.env.DATABASE_LOCAL;
+}
 
-// TODO: change this before finishing the program
-DB = process.env.DATABASE_LOCAL;
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -44,5 +42,14 @@ process.on("unhandledRejection", err => {
   console.log(`Unhandled Rejection 💣 Shutting down the server... `);
   server.close(() => {
     process.exit(1);
+  });
+});
+
+// heroku shuts down the server every 24 hours with
+// SIGTERM event, so we should handle it.
+process.on("SIGTERM", () => {
+  console.log("SIGTERM RECIEVED. Shutting down gracefully... :fire:");
+  server.close(() => {
+    console.log(`Process terminated :fire:`);
   });
 });
