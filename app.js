@@ -7,6 +7,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const compression = require("compression");
+const cors = require("cors");
 
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
@@ -29,6 +30,9 @@ app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(compression());
+app.use(cors());
+
+app.options("*", cors());
 
 // Serving static files
 // app.use(express.static(`${__dirname}/public`));
